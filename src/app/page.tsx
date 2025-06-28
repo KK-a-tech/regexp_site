@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 import CommonPatterns from "@/components/layout/CommonPatterns";
 
@@ -10,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Header />
       <div className="flex">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 lg:ml-0">
@@ -61,7 +62,7 @@ export default function Home() {
               </div>
             </section>
 
-
+            {/* よく使うパターン */}
             <section className="mb-16">
               <CommonPatterns  columns={1}  />
             </section>
@@ -93,6 +94,7 @@ export default function Home() {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

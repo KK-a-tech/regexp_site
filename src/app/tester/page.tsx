@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 
 // Mock components - replace with your actual components
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 import CommonPatterns from "@/components/layout/CommonPatterns";
 
@@ -91,7 +92,7 @@ export default function TesterPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Header />
       <div className="flex">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 px-4 sm:px-6 lg:px-12 py-8 lg:ml-64 max-w-[1200px] mx-auto">
@@ -224,6 +225,7 @@ export default function TesterPage() {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Header from "@/components/layout/Header";
+import Footer from '@/components/layout/Footer';
 import Sidebar from "@/components/layout/Sidebar";
 import CodeBlock from "@/components/ui/CodeBlock";
+
 
 // セクションコンポーネント
 const CheatSheetSection = ({ 
@@ -124,7 +126,7 @@ export default function CheatSheetPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Header />
       <div className="flex">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -221,6 +223,7 @@ export default function CheatSheetPage() {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

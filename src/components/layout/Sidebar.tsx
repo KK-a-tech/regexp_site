@@ -74,7 +74,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     <div>
       <aside
         className={`
-          fixed top-16 left-0 z-50 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
+          fixed top-16 left-0 z-40 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
           h-[calc(100vh-4rem)] overflow-y-auto
           transform transition-transform duration-200 ease-in-out
           lg:sticky lg:top-16 lg:translate-x-0 lg:static
