@@ -11,11 +11,15 @@ const commonPatterns = [
   { name: 'IPv4アドレス', pattern: '\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b' }
 ];
 
+interface CommonPatternsProps {
+  columns?: number;
+  className?: string;
+}
+
 export default function CommonPatterns({ 
-  onPatternSelect, 
   columns = 2, // デフォルトは2カラム
   className = "" 
-}) {
+}: CommonPatternsProps) {
   // カラム数に応じたCSSクラスを生成
   const getGridClasses = () => {
     switch (columns) {
@@ -37,24 +41,15 @@ export default function CommonPatterns({
       <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">よく使われるパターン</h2>
       <div className={`grid ${getGridClasses()} gap-4`}>
         {commonPatterns.map((pattern, index) => (
-        <div
-          key={index}
-          role="button"
-          tabIndex={0}
-          onClick={() => onPatternSelect(pattern.pattern)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onPatternSelect(pattern.pattern);
-            }
-          }}
-          className="text-left p-3 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-        >
-          <div className="font-medium text-gray-900 dark:text-white">{pattern.name}</div>
-          <CodeBlock>{pattern.pattern}</CodeBlock>
-        </div>
+          <div
+            key={index}
+            className="p-3 border border-gray-200 dark:border-gray-600 rounded-md"
+          >
+            <div className="font-medium text-gray-900 dark:text-white mb-2">{pattern.name}</div>
+            <CodeBlock>{pattern.pattern}</CodeBlock>
+          </div>
         ))}
       </div>
     </div>
   );
-};
+}

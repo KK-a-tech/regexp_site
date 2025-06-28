@@ -27,7 +27,7 @@ export default function BasicSyntax() {
             <p className="text-gray-600 dark:text-gray-300 mb-8">
               準備中...
             </p>
-            <CommonPatterns columns={2} />
+            <CommonPatterns />
           </div>
         </main>
       </div>
