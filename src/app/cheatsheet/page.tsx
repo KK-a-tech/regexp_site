@@ -118,7 +118,7 @@ export default function CheatSheetPage() {
   };
 
   // Fixed filtering logic
-  const filteredData = filterData().filter(([items]) => 
+  const filteredData = filterData().filter(([, items]) => 
     items.some(item => 
       item.pattern.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase())
