@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import React from "react";
+import Link from "next/link";
 
-const Sidebar = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+type SidebarProps = {
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const navigationItems = [
     {
       title: "基本構文",
@@ -70,7 +75,10 @@ const Sidebar = () => {
     <div>
       <aside
         className={`
-          fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+          fixed top-16 left-0 z-50 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
+          h-[calc(100vh-4rem)] overflow-y-auto
+          transform transition-transform duration-200 ease-in-out
+          lg:sticky lg:top-16 lg:translate-x-0 lg:static
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
@@ -80,24 +88,32 @@ const Sidebar = () => {
               <ul className="space-y-1">
                 {navigationItems.map((section) => (
                   <li key={section.title}>
-                    <button
-                      type="button"
+                    <div
+                      role="button"
+                      tabIndex={0}
                       onClick={() => toggleSection(section.title)}
-                      className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleSection(section.title);
+                        }
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none cursor-pointer"
                     >
                       {section.title}
                       <span>{openSections[section.title] ? "▲" : "▼"}</span>
-                    </button>
+                    </div>
                     {openSections[section.title] && (
                       <ul className="mt-1 space-y-1 pl-4">
                         {section.items.map((item) => (
                           <li key={item.id}>
-                            <a
+                            <Link
                               href={`/${item.id}`}
-                              className="group flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 rounded-md hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                              className="group flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 rounded-md hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 no-underline"
+                              onClick={() => setSidebarOpen(false)}
                             >
-                              {item.name}
-                            </a>
+                              <span>{item.name}</span>
+                            </Link>
                           </li>
                         ))}
                       </ul>

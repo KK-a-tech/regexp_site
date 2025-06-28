@@ -1,15 +1,18 @@
 'use client';
 
+import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
-import CodeBlock from "@/components/ui/CodeBlock";
+import CommonPatterns from "@/components/layout/CommonPatterns";
 
 export default function Home() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Header />
+      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex">
-        <Sidebar />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 lg:ml-0">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* ヒーローセクション */}
@@ -22,7 +25,7 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="#tester"
+                  href={"/tester"}
                   className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus-ring"
                 >
                   テスターを試す
@@ -60,30 +63,7 @@ export default function Home() {
 
 
             <section className="mb-16">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">よく使用されるパターン</h2>
-              <div className="space-y-4">
-                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">メールアドレス</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">基本的な検証パターン</span>
-                  </div>
-                  <CodeBlock>{"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"}</CodeBlock>
-                </div>
-                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">URL</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">HTTP/HTTPS URL</span>
-                  </div>
-                  <CodeBlock>{"https?://[-\\w.]+(:\\d+)?(/([\\w/_.])*)?}"}</CodeBlock>
-                </div>
-                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">電話番号（日本）</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">ハイフンあり/なし</span>
-                  </div>
-                  <CodeBlock>{"0\\d{1,4}-?\\d{1,4}-?\\d{4}"}</CodeBlock>
-                </div>
-              </div>
+              <CommonPatterns  columns={1}  />
             </section>
 
             {/* 学習リソース */}
