@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Header from "@/components/layout/Header";
+import Sidebar from "@/components/layout/Sidebar";
 import CodeBlock from "@/components/ui/CodeBlock";
 
 // セクションコンポーネント
@@ -121,116 +123,100 @@ export default function CheatSheetPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* ヘッダー */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                正規表現チートシート
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300 mt-2">
-                よく使用される正規表現パターンのクイックリファレンス
+      <Header />
+      <div className="flex">
+        <Sidebar />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">正規表現チートシート</h2>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">よく使用される正規表現パターンのクイックリファレンス</p>
+          {/* 検索とフィルター */}
+          <div className="mb-8 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="パターンや説明で検索..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* チートシートセクション */}
+          <div className="space-y-8">
+            {filteredData.map(([categoryKey, items]) => {
+              const categoryName = categories.find(cat => cat.id === categoryKey)?.name || categoryKey;
+              return (
+                <CheatSheetSection
+                  key={categoryKey}
+                  title={categoryName}
+                  items={items}
+                />
+              );
+            })}
+          </div>
+
+          {filteredData.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400 text-lg">
+                検索条件に一致するパターンが見つかりませんでした。
               </p>
             </div>
-            <a
-              href="/"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus-ring"
-            >
-              ← ホームに戻る
-            </a>
-          </div>
-        </div>
-      </header>
+          )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 検索とフィルター */}
-        <div className="mb-8 flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="パターンや説明で検索..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* チートシートセクション */}
-        <div className="space-y-8">
-          {filteredData.map(([categoryKey, items]) => {
-            const categoryName = categories.find(cat => cat.id === categoryKey)?.name || categoryKey;
-            return (
-              <CheatSheetSection
-                key={categoryKey}
-                title={categoryName}
-                items={items}
-              />
-            );
-          })}
-        </div>
-
-        {filteredData.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
-              検索条件に一致するパターンが見つかりませんでした。
-            </p>
-          </div>
-        )}
-
-        {/* よく使用されるパターン例 */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">実用的なパターン例</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">検証パターン</h3>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">メールアドレス</p>
-                  <CodeBlock>{"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"}</CodeBlock>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">URL</p>
-                  <CodeBlock>{"https?://[\\w.-]+(/[\\w._~:/?#[\\]@!$&'()*+,;=-]*)?"}</CodeBlock>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">日本の郵便番号</p>
-                  <CodeBlock>{"\\d{3}-\\d{4}"}</CodeBlock>
+          {/* よく使用されるパターン例 */}
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">実用的なパターン例</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">検証パターン</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">メールアドレス</p>
+                    <CodeBlock>{"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"}</CodeBlock>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">URL</p>
+                    <CodeBlock>{"https?://[\\w.-]+(/[\\w._~:/?#[\\]@!$&'()*+,;=-]*)?"}</CodeBlock>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">日本の郵便番号</p>
+                    <CodeBlock>{"\\d{3}-\\d{4}"}</CodeBlock>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">抽出パターン</h3>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">HTMLタグ</p>
-                  <CodeBlock>{"<([a-zA-Z]+)[^>]*>"}</CodeBlock>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">IPv4アドレス</p>
-                  <CodeBlock>{"\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"}</CodeBlock>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">日付（YYYY-MM-DD）</p>
-                  <CodeBlock>{"\\d{4}-\\d{2}-\\d{2}"}</CodeBlock>
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">抽出パターン</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">HTMLタグ</p>
+                    <CodeBlock>{"<([a-zA-Z]+)[^>]*>"}</CodeBlock>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">IPv4アドレス</p>
+                    <CodeBlock>{"\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"}</CodeBlock>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">日付（YYYY-MM-DD）</p>
+                    <CodeBlock>{"\\d{4}-\\d{2}-\\d{2}"}</CodeBlock>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
