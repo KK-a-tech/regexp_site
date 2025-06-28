@@ -38,8 +38,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     {
       title: "テスター",
       items: [
-        { name: "リアルタイム検証", id: "realtime" },
-        { name: "マッチ結果表示", id: "match-result" },
+        { name: "正規表現テスター", id: "tester" },
       ],
     },
     {
