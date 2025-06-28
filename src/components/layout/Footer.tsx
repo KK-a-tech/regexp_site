@@ -6,16 +6,17 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const navigationLinks = [
+    { name: "Top", href: "/" },
     { name: "テスター", href: "/tester" },
-    { name: "リファレンス", href: "/reference" },
-    { name: "例文集", href: "/examples" },
-    { name: "チートシート", href: "/cheatsheet" }
+    { name: "チートシート", href: "/cheatsheet" },
+    { name: "プライバシーポリシー", href: "/privacy" },
+    { name: "利用規約", href: "/terms" },
   ];
 
   const externalLinks = [
     { name: "GitHub", href: "https://github.com", icon: "github" },
     { name: "Twitter", href: "https://twitter.com", icon: "twitter" },
-    { name: "お問い合わせ", href: "/contact", icon: "mail" }
+    { name: "お問い合わせ", href: "/contact", icon: "mail" },
   ];
 
   const getSvgIcon = (iconType: string) => {
@@ -98,28 +99,12 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-
-        {/* 下部の区切り線とコピーライト */}
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              © {currentYear} 正規表現リファレンス. All rights reserved.
-            </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link
-                href="/privacy"
-                className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
-              >
-                プライバシーポリシー
-              </Link>
-              <Link
-                href="/terms"
-                className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
-              >
-                利用規約
-              </Link>
-            </div>
-          </div>
+      </div>
+      <div className="flex flex-col items-center mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col md:flex-row items-center justify-center w-full">
+          <p className="text-gray-500 dark:text-gray-400 text-sm ">
+            © {currentYear} 正規表現リファレンス. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

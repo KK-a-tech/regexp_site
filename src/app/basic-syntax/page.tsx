@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 import CommonPatterns from "@/components/layout/CommonPatterns";
 
-export default function CommonPatternsPage() {
+export default function BasicSyntax() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -18,13 +18,16 @@ export default function CommonPatternsPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="text-center mb-16">
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                よく使うパターン一覧
+                基本構文を学ぶ
               </h1>
               <p className="text-gray-600 dark:text-gray-300 mb-8">
-                コピーをクリックすると、正規表現パターンを簡単にコピーして使用できます。
+                正規表現の基礎構文を学びましょう。
               </p>
             </div>
-            <CommonPatterns columns={1} />
+            <p className="text-gray-600 dark:text-gray-300 mb-8">
+              準備中...
+            </p>
+            <CommonPatterns columns={2} />
           </div>
         </main>
       </div>

@@ -32,7 +32,7 @@ export default function Home() {
                   テスターを試す
                 </a>
                 <a
-                  href="#basic-syntax"
+                  href={"/basic-syntax"}
                   className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus-ring"
                 >
                   基本構文を学ぶ
@@ -70,7 +70,8 @@ export default function Home() {
             {/* 学習リソース */}
             <section>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">学習リソース</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <p>準備中...</p>
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">初心者向け</h3>
                   <ul className="space-y-2 text-gray-600 dark:text-gray-300">
@@ -89,7 +90,7 @@ export default function Home() {
                     <li><a href="#" className="content-link">言語固有の機能</a></li>
                   </ul>
                 </div>
-              </div>
+              </div> */}
             </section>
           </div>
         </main>
