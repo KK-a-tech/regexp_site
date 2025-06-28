@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 
 
-const RegexGroupingReference = () => {
+export default function RegexGroupingReference(){
   const [testInput, setTestInput] = useState('');
   const [selectedPattern, setSelectedPattern] = useState('');
   const [matchResult, setMatchResult] = useState(null);
@@ -246,6 +246,10 @@ const RegexGroupingReference = () => {
       <div className="flex flex-1">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 bg-white dark:bg-gray-800 overflow-y-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">グループ化</h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">キャプチャグループについて知ろう</p>
+          </div>
           <div className="max-w-4xl mx-auto px-6 py-8 text-gray-800 dark:text-gray-200">
             <section className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-8 scroll-mt-4" id="quick-test">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">クイックテスト</h2>
@@ -464,5 +468,3 @@ const RegexGroupingReference = () => {
     </div>
   );
 };
-
-export default RegexGroupingReference;

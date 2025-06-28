@@ -226,4 +226,4 @@ export default function CheatSheetPage() {
       <Footer />
     </div>
   );
-};
+}

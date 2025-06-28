@@ -9,7 +9,7 @@ const Footer = () => {
     { name: "Top", href: "/" },
     { name: "テスター", href: "/tester" },
     { name: "チートシート", href: "/cheatsheet" },
-    { name: "プライバシーポリシー", href: "/privacy" },
+    { name: "プライバシーポリシー", href: "/privacy-poricy" },
     { name: "利用規約", href: "/terms" },
   ];
 

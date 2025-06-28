@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
@@ -54,11 +55,11 @@ export default function Home() {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">繰り返しの指定方法</p>
                   <code className="text-sm">* + ? {'{n}'} {'{n,m}'}</code>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <Link href="/groups" className="block bg-gray-50 dark:bg-gray-800 rounded-lg p-6 hover:shadow-lg transition-shadow">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">グループ化</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">パターンのグループ化と参照</p>
                   <code className="text-sm">() (?:) \1 \2</code>
-                </div>
+                </Link>
               </div>
             </section>
 
