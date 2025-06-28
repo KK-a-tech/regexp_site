@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
@@ -35,20 +35,6 @@ export default function RegexGroupingReference(){
       testRegex(selectedPattern, testInput);
     }
   };
-
-  const copyToClipboard = (text) => {
-    try {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-    } catch (err) {
-        console.error('クリップボードへのコピーに失敗しました', err);
-    }
-  };
-
 
   const groupingMethods = [
     {
@@ -297,10 +283,10 @@ export default function RegexGroupingReference(){
                         <div className="space-y-2">
                           {matchResult.matches.map((match, index) => (
                             <div key={index} className="font-mono text-sm text-gray-700 dark:text-gray-300">
-                              <div><strong>マッチ {index + 1}:</strong> "{match[0]}"</div>
+                              <div><strong>マッチ {index + 1}:</strong> &quot;{match[0]}&quot;</div>
                               {match.slice(1).map((group, groupIndex) => (
                                 <div key={groupIndex} className="ml-4">
-                                  グループ {groupIndex + 1}: "{group}"
+                                  グループ {groupIndex + 1}: &quot;{group}&quot;
                                 </div>
                               ))}
                               {match.groups && Object.keys(match.groups).length > 0 && (

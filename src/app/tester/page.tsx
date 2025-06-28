@@ -81,15 +81,6 @@ export default function TesterPage() {
     }
   }, [regex, flags, testString]);
 
-  const commonPatterns = [
-    { name: 'メールアドレス', pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}' },
-    { name: '電話番号', pattern: '\\d{2,4}-\\d{2,4}-\\d{4}' },
-    { name: '郵便番号', pattern: '\\d{3}-\\d{4}' },
-    { name: 'URL', pattern: 'https?://[\\w\\-._~:/?#\\[\\]@!$&\'()*+,;=%]+' },
-    { name: '日付 (YYYY-MM-DD)', pattern: '\\d{4}-\\d{2}-\\d{2}' },
-    { name: 'IPv4アドレス', pattern: '\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b' }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />

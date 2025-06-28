@@ -117,7 +117,7 @@ export default function CheatSheetPage() {
     return [[selectedCategory, cheatSheetData[selectedCategory as keyof typeof cheatSheetData]]];
   };
 
-  const filteredData = filterData().filter(([_, items]) => 
+  const filteredData = filterData().filter((items) => 
     items.some(item => 
       item.pattern.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase())
