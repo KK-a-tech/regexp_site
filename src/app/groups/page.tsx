@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
+
 
 const RegexGroupingReference = () => {
   const [testInput, setTestInput] = useState('');
@@ -23,6 +24,10 @@ const RegexGroupingReference = () => {
     } catch (error) {
       setMatchResult({ error: error.message, matches: [] });
     }
+    // stateの更新がDOMに反映された後にページトップへスクロールを実行
+    setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   const handleTest = () => {
@@ -32,302 +37,312 @@ const RegexGroupingReference = () => {
   };
 
   const copyToClipboard = (text) => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard.writeText(text);
+    try {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    } catch (err) {
+        console.error('クリップボードへのコピーに失敗しました', err);
     }
   };
 
 
   const groupingMethods = [
     {
-      title: "Capturing Groups",
+      title: "キャプチャグループ",
       syntax: "(pattern)",
-      description: "Creates a capturing group that remembers the matched text for later use.",
-      jsExample: `const regex = /(\d{4})-(\d{2})-(\d{2})/;
-const match = "2024-12-25".match(regex);
-console.log(match[1]); // "2024"
-console.log(match[2]); // "12"
-console.log(match[3]); // "25"`,
+      description: "一致したテキストを後で使用するために記憶するキャプチャグループを作成します。",
+      jsExample: `const regex = /(\\d{4})-(\\d{2})-(\\d{2})/;
+        const match = "2024-12-25".match(regex);
+        console.log(match[1]); // "2024"
+        console.log(match[2]); // "12"
+        console.log(match[3]); // "25"`,
       examples: [
         {
           pattern: "(\\d{4})-(\\d{2})-(\\d{2})",
           input: "Date: 2024-12-25",
-          description: "Captures year, month, and day separately"
+          description: "年、月、日を個別にキャプチャします"
         },
         {
           pattern: "([a-zA-Z]+)@([a-zA-Z0-9.-]+)",
           input: "Contact: john@example.com",
-          description: "Captures username and domain parts of email"
+          description: "メールのユーザー名とドメイン部分をキャプチャします"
         }
       ],
       properties: [
-        "Creates numbered capture groups starting from 1",
-        "Accessible via match result array indices",
-        "Can be referenced in replacement strings with $1, $2, etc."
+        "1から始まる番号付きキャプチャグループを作成します",
+        "マッチ結果の配列のインデックスを介してアクセスできます",
+        "$1、$2などを使用して置換文字列で参照できます"
       ]
     },
     {
-      title: "Non-Capturing Groups",
+      title: "非キャプチャグループ",
       syntax: "(?:pattern)",
-      description: "Groups expressions without creating a capture group.",
-      jsExample: `const regex = /(?:https?|ftp):\/\/([\\w.-]+)/;
-const match = "https://example.com".match(regex);
-console.log(match[1]); // "example.com"
-// Protocol is not captured`,
+      description: "キャプチャグループを作成せずに式をグループ化します。",
+      jsExample: `const regex = /(?:https?|ftp):\\/\\/([\\w.-]+)/;
+        const match = "https://example.com".match(regex);
+        console.log(match[1]); // "example.com"
+        // プロトコルはキャプチャされません`,
       examples: [
         {
           pattern: "(?:Mr|Ms|Dr)\\. ([A-Z][a-z]+)",
           input: "Dr. Smith and Ms. Johnson",
-          description: "Groups title options without capturing them"
+          description: "敬称の選択肢をキャプチャせずにグループ化します"
         },
         {
           pattern: "(?:cat|dog)s?",
           input: "I have cats and dogs",
-          description: "Matches singular or plural without capturing base word"
+          description: "基本単語をキャプチャせずに単数形または複数形に一致させます"
         }
       ],
       properties: [
-        "Does not create numbered capture groups",
-        "More memory efficient than capturing groups",
-        "Useful for grouping with alternation (|)"
+        "番号付きキャプチャグループを作成しません",
+        "キャプチャグループよりもメモリ効率が良いです",
+        "選択(|)を使ったグループ化に便利です"
       ]
     },
     {
-      title: "Positive Lookahead",
+      title: "肯定先読み",
       syntax: "(?=pattern)",
-      description: "Matches a group after the main expression without including it in the result.",
+      description: "メインの式の後にあるグループに一致しますが、結果には含めません。",
       jsExample: `const regex = /\\w+(?=@)/g;
-const matches = "user@domain.com".match(regex);
-console.log(matches); // ["user"]`,
+        const matches = "user@domain.com".match(regex);
+        console.log(matches); // ["user"]`,
       examples: [
         {
           pattern: "\\d+(?=円)",
           input: "100円と200ドル",
-          description: "Matches numbers followed by 円"
+          description: "「円」が続く数字に一致します"
         },
         {
           pattern: "\\w+(?=\\s+is)",
           input: "JavaScript is awesome",
-          description: "Matches words followed by ' is'"
+          description: "「 is」が続く単語に一致します"
         }
       ],
       properties: [
-        "Zero-width assertion",
-        "Does not consume characters",
-        "Useful for conditional matching"
+        "ゼロ幅のアサーションです",
+        "文字を消費しません",
+        "条件付きのマッチングに便利です"
       ]
     },
     {
-      title: "Negative Lookahead",
+      title: "否定先読み",
       syntax: "(?!pattern)",
-      description: "Matches a group that is not followed by a specific pattern.",
+      description: "特定のパターンの後に続かないグループに一致します。",
       jsExample: `const regex = /Java(?!Script)/g;
-const text = "Java and JavaScript";
-const matches = text.match(regex);
-console.log(matches); // ["Java"]`,
+        const text = "Java and JavaScript";
+        const matches = text.match(regex);
+        console.log(matches); // ["Java"]`,
       examples: [
         {
           pattern: "\\w+(?!@)",
           input: "user@domain.com",
-          description: "Matches words not followed by @"
+          description: "@が続かない単語に一致します"
         },
         {
           pattern: "\\d+(?!px)",
           input: "10px 20em 15pt",
-          description: "Matches numbers not followed by px"
+          description: "「px」が続かない数字に一致します"
         }
       ],
       properties: [
-        "Zero-width assertion",
-        "Excludes matches with unwanted suffixes",
-        "Commonly used for filtering"
+        "ゼロ幅のアサーションです",
+        "不要な接尾辞を持つマッチを除外します",
+        "フィルタリングによく使用されます"
       ]
     },
     {
-      title: "Positive Lookbehind",
+      title: "肯定後読み",
       syntax: "(?<=pattern)",
-      description: "Matches a group that is preceded by a specific pattern.",
+      description: "特定のパターンの前にあるグループに一致します。",
       jsExample: `const regex = /(?<=\\$)\\d+/g;
-const matches = "$100 and 200yen".match(regex);
-console.log(matches); // ["100"]`,
+        const matches = "$100 and 200yen".match(regex);
+        console.log(matches); // ["100"]`,
       examples: [
         {
           pattern: "(?<=@)\\w+",
           input: "user@domain.com",
-          description: "Matches domain part after @"
+          description: "@の後のドメイン部分に一致します"
         },
         {
           pattern: "(?<=#)\\w+",
           input: "Visit #javascript and #react",
-          description: "Matches hashtag content"
+          description: "ハッシュタグの内容に一致します"
         }
       ],
       properties: [
-        "Zero-width assertion",
-        "ES2018+ feature",
-        "Not supported in all browsers"
+        "ゼロ幅のアサーションです",
+        "ES2018+の機能です",
+        "すべてのブラウザでサポートされているわけではありません"
       ]
     },
     {
-      title: "Negative Lookbehind",
+      title: "否定後読み",
       syntax: "(?<!pattern)",
-      description: "Matches a group that is not preceded by a specific pattern.",
+      description: "特定のパターンの前にないグループに一致します。",
       jsExample: `const regex = /(?<!un)happy/g;
-const matches = "happy unhappy".match(regex);
-console.log(matches); // ["happy"]`,
+        const matches = "happy unhappy".match(regex);
+        console.log(matches); // ["happy"]`,
       examples: [
         {
           pattern: "(?<!@)\\w+",
           input: "user@domain.com",
-          description: "Matches words not preceded by @"
+          description: "@が前にない単語に一致します"
         },
         {
           pattern: "(?<!\\d)\\d{3}",
           input: "123 and 4567",
-          description: "Matches 3-digit numbers not part of longer numbers"
+          description: "より長い数字の一部ではない3桁の数字に一致します"
         }
       ],
       properties: [
-        "Zero-width assertion",
-        "ES2018+ feature",
-        "Useful for context-sensitive matching"
+        "ゼロ幅のアサーションです",
+        "ES2018+の機能です",
+        "文脈に応じたマッチングに便利です"
       ]
     },
     {
-      title: "Named Capturing Groups",
+      title: "名前付きキャプチャグループ",
       syntax: "(?<name>pattern)",
-      description: "Creates a capturing group with a custom name for easier reference.",
+      description: "参照しやすくするためにカスタム名を持つキャプチャグループを作成します。",
       jsExample: `const regex = /(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})/;
-const match = "2024-12-25".match(regex);
-console.log(match.groups.year);  // "2024"
-console.log(match.groups.month); // "12"
-console.log(match.groups.day);   // "25"`,
+        const match = "2024-12-25".match(regex);
+        console.log(match.groups.year);  // "2024"
+        console.log(match.groups.month); // "12"
+        console.log(match.groups.day);   // "25"`,
       examples: [
         {
           pattern: "(?<protocol>https?)://(?<domain>[\\w.-]+)",
           input: "https://example.com",
-          description: "Named groups for URL components"
+          description: "URLコンポーネントのための名前付きグループ"
         },
         {
           pattern: "(?<hour>\\d{2}):(?<minute>\\d{2})",
           input: "14:30",
-          description: "Named groups for time components"
+          description: "時間コンポーネントのための名前付きグループ"
         }
       ],
       properties: [
-        "ES2018+ feature",
-        "Accessible via match.groups object",
-        "More readable than numbered groups"
+        "ES2018+の機能です",
+        "match.groupsオブジェクトを介してアクセスできます",
+        "番号付きグループよりも読みやすいです"
       ]
     }
   ];
+
+  const TestIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-2">
+        <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+    </svg>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header />
       <div className="flex flex-1">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main className="flex-1 bg-white overflow-y-auto">
-          <div className="max-w-4xl mx-auto px-6 py-8">
-            <section className="border border-gray-200 rounded-lg p-6 mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Test</h2>
+        <main className="flex-1 bg-white dark:bg-gray-800 overflow-y-auto">
+          <div className="max-w-4xl mx-auto px-6 py-8 text-gray-800 dark:text-gray-200">
+            <section className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-8 scroll-mt-4" id="quick-test">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">クイックテスト</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Pattern
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      パターン
                     </label>
                     <input
                       type="text"
                       value={selectedPattern}
                       onChange={(e) => setSelectedPattern(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded font-mono text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      placeholder="Enter regex pattern"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded font-mono text-sm focus:outline-none focus:ring-1 focus:ring-gray-500 bg-white dark:bg-gray-700"
+                      placeholder="正規表現パターンを入力"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Test String
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      テスト文字列
                     </label>
                     <input
                       type="text"
                       value={testInput}
                       onChange={(e) => setTestInput(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded font-mono text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      placeholder="Enter test string"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded font-mono text-sm focus:outline-none focus:ring-1 focus:ring-gray-500 bg-white dark:bg-gray-700"
+                      placeholder="テストする文字列を入力"
                     />
                   </div>
                 </div>
                 <button
                   onClick={handleTest}
-                  className="px-4 py-2 bg-gray-900 text-white rounded text-sm hover:bg-gray-800 transition-colors"
+                  className="px-4 py-2 bg-gray-900 text-white rounded text-sm hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors"
                 >
-                  Test
+                  テスト
                 </button>
                 
-                {matchResult && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded border">
-                    <h3 className="font-medium text-gray-900 mb-2">Result:</h3>
-                    {matchResult.error ? (
-                      <div className="text-red-600 font-mono text-sm">{matchResult.error}</div>
-                    ) : matchResult.matches && matchResult.matches.length > 0 ? (
-                      <div className="space-y-2">
-                        {matchResult.matches.map((match, index) => (
-                          <div key={index} className="font-mono text-sm">
-                            <div><strong>Match {index + 1}:</strong> "{match[0]}"</div>
-                            {match.slice(1).map((group, groupIndex) => (
-                              <div key={groupIndex} className="ml-4">
-                                Group {groupIndex + 1}: "{group}"
-                              </div>
-                            ))}
-                            {match.groups && (
-                              <div className="ml-4">
-                                Named groups: {JSON.stringify(match.groups)}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-gray-500 font-mono text-sm">No matches</div>
-                    )}
-                  </div>
-                )}
+                <div>
+                  {matchResult && (
+                    <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded border dark:border-gray-700">
+                      <h3 className="font-medium text-gray-900 dark:text-white mb-2">結果:</h3>
+                      {matchResult.error ? (
+                        <div className="text-red-600 font-mono text-sm">{matchResult.error}</div>
+                      ) : matchResult.matches && matchResult.matches.length > 0 ? (
+                        <div className="space-y-2">
+                          {matchResult.matches.map((match, index) => (
+                            <div key={index} className="font-mono text-sm text-gray-700 dark:text-gray-300">
+                              <div><strong>マッチ {index + 1}:</strong> "{match[0]}"</div>
+                              {match.slice(1).map((group, groupIndex) => (
+                                <div key={groupIndex} className="ml-4">
+                                  グループ {groupIndex + 1}: "{group}"
+                                </div>
+                              ))}
+                              {match.groups && Object.keys(match.groups).length > 0 && (
+                                <div className="ml-4">
+                                  名前付きグループ: {JSON.stringify(match.groups)}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 font-mono text-sm">一致しませんでした</div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
             {/* Methods */}
             <div className="space-y-8">
               {groupingMethods.map((method, index) => (
-                <section key={index} className="border-b border-gray-200 pb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+                <section key={index} className="border-b border-gray-200 dark:border-gray-700 pb-8">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
                     {method.title}
                   </h2>
                   
                   {/* Syntax */}
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Syntax</h3>
-                    <div className="bg-gray-50 border rounded p-3 font-mono text-sm flex items-center justify-between">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">構文</h3>
+                    <div className="bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded p-3 font-mono text-sm flex items-center justify-between">
                       <code>{method.syntax}</code>
-                      <button
-                        onClick={() => copyToClipboard(method.syntax)}
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                      </button>
                     </div>
                   </div>
 
                   {/* Description */}
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
-                    <p className="text-gray-700">{method.description}</p>
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">説明</h3>
+                    <p className="text-gray-700 dark:text-gray-300">{method.description}</p>
                   </div>
 
                   {/* JavaScript Example */}
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">JavaScript Example</h3>
-                    <div className="bg-gray-50 border rounded p-4">
-                      <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">JavaScriptの例</h3>
+                    <div className="bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded p-4">
+                      <pre className="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
                         <code>{method.jsExample}</code>
                       </pre>
                     </div>
@@ -335,31 +350,21 @@ console.log(match.groups.day);   // "25"`,
 
                   {/* Examples */}
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Examples</h3>
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">使用例</h3>
                     <div className="space-y-3">
                       {method.examples.map((example, exampleIndex) => (
-                        <div key={exampleIndex} className="border border-gray-200 rounded p-4">
+                        <div key={exampleIndex} className="border border-gray-200 dark:border-gray-700 rounded p-4">
                           <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-2">
                             <div>
-                              <div className="text-xs text-gray-500 mb-1">Pattern</div>
-                              <div className="font-mono text-sm bg-gray-50 p-2 rounded border flex items-center justify-between">
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">パターン</div>
+                              <div className="font-mono text-sm bg-gray-50 dark:bg-gray-900 p-2 rounded border dark:border-gray-700 flex items-center justify-between">
                                 <span>{example.pattern}</span>
-                                <button
-                                  onClick={() => setSelectedPattern(example.pattern)}
-                                  className="text-gray-500 hover:text-gray-700"
-                                >
-                                </button>
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-gray-500 mb-1">Input</div>
-                              <div className="font-mono text-sm bg-gray-50 p-2 rounded border flex items-center justify-between">
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">入力</div>
+                              <div className="font-mono text-sm bg-gray-50 dark:bg-gray-900 p-2 rounded border dark:border-gray-700 flex items-center justify-between">
                                 <span>{example.input}</span>
-                                <button
-                                  onClick={() => setTestInput(example.input)}
-                                  className="text-gray-500 hover:text-gray-700"
-                                >
-                                </button>
                               </div>
                             </div>
                             <div className="flex items-end">
@@ -369,13 +374,14 @@ console.log(match.groups.day);   // "25"`,
                                   setTestInput(example.input);
                                   testRegex(example.pattern, example.input);
                                 }}
-                                className="px-3 py-2 bg-gray-900 text-white rounded text-sm hover:bg-gray-800 transition-colors flex items-center"
+                                className="px-3 py-2 bg-gray-900 text-white rounded text-sm hover:bg-gray-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors flex items-center w-full justify-center"
                               >
-                                Test
+                                <TestIcon />
+                                テスト
                               </button>
                             </div>
                           </div>
-                          <p className="text-sm text-gray-600">{example.description}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{example.description}</p>
                         </div>
                       ))}
                     </div>
@@ -383,8 +389,8 @@ console.log(match.groups.day);   // "25"`,
 
                   {/* Properties */}
                   <div>
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Properties</h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">特性</h3>
+                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                       {method.properties.map((property, propIndex) => (
                         <li key={propIndex} className="flex">
                           <span className="mr-2">•</span>
@@ -398,50 +404,50 @@ console.log(match.groups.day);   // "25"`,
             </div>
 
             {/* Browser Support */}
-            <section className="border border-gray-200 rounded-lg p-6 mt-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Browser Support</h2>
+            <section className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 mt-8">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">ブラウザのサポート</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-2 pr-4">Feature</th>
+                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                      <th className="text-left py-2 pr-4">機能</th>
                       <th className="text-left py-2 pr-4">Chrome</th>
                       <th className="text-left py-2 pr-4">Firefox</th>
                       <th className="text-left py-2 pr-4">Safari</th>
                       <th className="text-left py-2">Edge</th>
                     </tr>
                   </thead>
-                  <tbody className="text-gray-700">
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 pr-4">Capturing Groups</td>
+                  <tbody className="text-gray-700 dark:text-gray-300">
+                    <tr className="border-b border-gray-100 dark:border-gray-700/50">
+                      <td className="py-2 pr-4">キャプチャグループ</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2">✓ All</td>
                     </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 pr-4">Non-capturing Groups</td>
+                    <tr className="border-b border-gray-100 dark:border-gray-700/50">
+                      <td className="py-2 pr-4">非キャプチャグループ</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2">✓ All</td>
                     </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 pr-4">Lookahead</td>
+                    <tr className="border-b border-gray-100 dark:border-gray-700/50">
+                      <td className="py-2 pr-4">先読み</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2 pr-4">✓ All</td>
                       <td className="py-2">✓ All</td>
                     </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 pr-4">Lookbehind</td>
+                    <tr className="border-b border-gray-100 dark:border-gray-700/50">
+                      <td className="py-2 pr-4">後読み</td>
                       <td className="py-2 pr-4">✓ 62+</td>
                       <td className="py-2 pr-4">✓ 78+</td>
                       <td className="py-2 pr-4">✓ 16.4+</td>
                       <td className="py-2">✓ 79+</td>
                     </tr>
                     <tr>
-                      <td className="py-2 pr-4">Named Groups</td>
+                      <td className="py-2 pr-4">名前付きグループ</td>
                       <td className="py-2 pr-4">✓ 64+</td>
                       <td className="py-2 pr-4">✓ 78+</td>
                       <td className="py-2 pr-4">✓ 11.1+</td>
